@@ -6,7 +6,7 @@ from django.utils.timezone import now
 # Create your views here.
 def news_list(request):
     news = News.objects.all().order_by('-created_at')
-    return render(request, 'news/news_list.html', {'news': news})
+    return render(request, 'news/news_list.html', {'news_list': news})
 
 from .models import Comment
 

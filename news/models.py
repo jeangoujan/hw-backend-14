@@ -9,6 +9,9 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def has_comments(self):
+        return self.comments.exists()
 
 class Comment(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE, related_name="comments")
@@ -17,3 +20,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Комментарий к {self.news.title}"
+
