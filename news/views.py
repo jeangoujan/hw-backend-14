@@ -20,7 +20,7 @@ def news_detail(request, news_id):
         return redirect('news_detail', news_id=news.id)
 
     return render(request, 'news/news_detail.html', {'news': news, 'comments': comments})
-
+ 
 
 def add_news(request):
     if request.method == 'POST':
