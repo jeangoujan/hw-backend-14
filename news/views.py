@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import News
 from django.utils.timezone import now
+from django.views import View
+from .forms import NewsForm
 
 # Create your views here.
 def news_list(request):
@@ -24,8 +26,27 @@ def news_detail(request, news_id):
 
 def add_news(request):
     if request.method == 'POST':
-        title = request.POST['title']
-        content = request.POST['content']
-        news = News.objects.create(title=title, content=content, created_at=now())
-        return redirect('news_detail', news_id=news.id)
-    return render(request, 'news/add_news.html')
+        form = NewsForm(request.POST)
+        if form.is_valid():
+            news = form.save(commit=False)
+            news.created_at = now()
+            news.save()
+            return redirect('news_detail', news_id=news.id)
+    else:
+        form = NewsForm()
+    return render(request, 'news/add_news.html', {'form': form})
+
+
+class NewsUpdateView(View):
+    def get(self, request, news_id):
+        news = get_object_or_404(News, id=news_id)
+        form = NewsForm(instance=news)
+        return render(request, 'news/edit_news.html', {'form': form, 'news': news})
+
+    def post(self, request, news_id):
+        news = get_object_or_404(News, id=news_id)
+        form = NewsForm(request.POST, instance=news)
+        if form.is_valid():
+            form.save()
+            return redirect('news_detail', news_id=news.id)
+        return render(request, 'news/edit_news.html', {'form': form, 'news': news})

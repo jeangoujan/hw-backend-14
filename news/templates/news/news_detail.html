@@ -1,22 +1,28 @@
-<h1>{{ news.title }}</h1>
-<p>{{ news.content }}</p>
-<p><small>Опубликовано: {{ news.created_at }}</small></p>
+{% extends 'base.html' %}
 
-<h2>Комментарии</h2>
-<ul>
-    {% for comment in comments %}
-        <li>{{ comment.content }} ({{ comment.created_at }})</li>
-    {% empty %}
-        <li>Пока нет комментариев.</li>
-    {% endfor %}
-</ul>
+{% block title %}{{ news.title }}{% endblock %}
 
-<h3>Добавить комментарий</h3>
-<form method="post">
-    {% csrf_token %}
-    <textarea name="content" required></textarea>
-    <br>
-    <button type="submit">Отправить</button>
-</form>
+{% block content %}
+    <h1>{{ news.title }}</h1>
+    <p>{{ news.content }}</p>
+    <p><small>Опубликовано: {{ news.created_at }}</small></p>
 
-<a href="{% url 'news_list' %}">Назад к новостям</a>
+    <h2>Комментарии</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.content }} ({{ comment.created_at }})</li>
+        {% empty %}
+            <li>Пока нет комментариев.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Добавить комментарий</h3>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" required></textarea>
+        <br>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <a href="{% url 'news_list' %}">Назад к новостям</a>
+{% endblock %}
