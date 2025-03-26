@@ -14,4 +14,14 @@
             <li>Новостей пока нет.</li>
         {% endfor %}
     </ul>
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Войти</button>
+    </form>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Выйти из системы</button>
+    </form>
 {% endblock %}

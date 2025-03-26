@@ -7,22 +7,42 @@
     <p>{{ news.content }}</p>
     <p><small>Опубликовано: {{ news.created_at }}</small></p>
 
+    {% if user == news.author or can_delete_news %}
+        <form action="{% url 'news_delete' news.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="color: red;">Удалить новость</button>
+        </form>
+    {% endif %}
+
     <h2>Комментарии</h2>
     <ul>
         {% for comment in comments %}
-            <li>{{ comment.content }} ({{ comment.created_at }})</li>
+            <li>
+                {{ comment.content }} ({{ comment.created_at }})
+                {% if user == comment.author or can_delete_comment %}
+                    <form action="{% url 'comment_delete' comment.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="color: red;">Удалить</button>
+                    </form>
+                {% endif %}
+            </li>
         {% empty %}
-            <li>Пока нет комментариев.</li>
+            <li>Пока нет комментариев</li>
         {% endfor %}
     </ul>
 
     <h3>Добавить комментарий</h3>
-    <form method="post">
-        {% csrf_token %}
-        <textarea name="content" required></textarea>
-        <br>
-        <button type="submit">Отправить</button>
-    </form>
+
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" required></textarea>
+            <br>
+            <button type="submit">Отправить</button>
+        </form>
+    {% else %}
+        <p>Доступно для авторизованных</p>
+    {% endif %}
 
     <a href="{% url 'news_list' %}">Назад к новостям</a>
 {% endblock %}
